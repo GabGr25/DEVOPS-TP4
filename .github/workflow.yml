@@ -1,10 +1,9 @@
-name: Github build workflow
+name: Github workflow
 
 on:
   push:
     branches:
       - main
-      - gh-pages
 
 jobs:
   # Build the app
@@ -30,4 +29,22 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build
+          path: ./build
+
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Download artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          name: build
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v3
+        with:
           path: ./build
